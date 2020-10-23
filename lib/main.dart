@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotifuad/screen/home_screen.dart';
+import 'package:spotifuad/screen/home/home_screen.dart';
 
 void main() {
   runApp(MyApp());
