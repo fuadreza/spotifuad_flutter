@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spotifuad/screen/home/home_screen.dart';
+import 'package:spotifuad/screen/splash/splash_screen.dart';
+import 'package:spotifuad/utils/navigator.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: SplashScreen(),
+      routes: routes,
     );
   }
 }
