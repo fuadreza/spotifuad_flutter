@@ -11,7 +11,7 @@ class SplashScreen extends StatelessWidget {
 
   dynamic startTimer(BuildContext context) async {
     var _duration = Duration(seconds: 2);
-    return Timer(_duration, () => MyNavigator.goToHome(context));
+    return Timer(_duration, () => MyNavigator.goToLogin(context));
   }
 
   @override
