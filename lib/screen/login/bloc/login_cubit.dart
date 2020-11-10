@@ -9,6 +9,7 @@ class LoginCubit extends Cubit<LoginState>{
   LoginCubit(this._repository) : super(LoginInitState());
 
   Future<void> loginUser(String username, String password){
+    //TODO Implement Login from repository
     return null;
   }
 
