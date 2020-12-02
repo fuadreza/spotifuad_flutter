@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:spotifuad/screen/login/bloc/login_cubit.dart';
 import 'package:spotifuad/utils/setup.dart';
 import 'package:spotifuad/utils/tools.dart';
 
@@ -8,13 +11,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  LoginCubit loginBloc;
+
   final String logoSpotifuad = 'images/ic_logo.png';
 
   final String logoGoogle = 'images/google_logo.png';
 
+  bool _isLoggedIn = false;
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+
   @override
   void initState() {
     super.initState();
+    loginBloc = BlocProvider.of<LoginCubit>(context);
   }
 
   @override
@@ -52,7 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _signInButton() {
     return InkWell(
-      onTap: (){},
+      onTap: (){
+        _login();
+      },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(50)),
@@ -81,5 +93,25 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void _login() async{
+    try{
+      await _googleSignIn.signIn();
+      setState(() {
+        _isLoggedIn = true;
+      });
+      print("EMAIL USER : ${_googleSignIn.currentUser.email}");
+      print("NAME USER : ${_googleSignIn.currentUser.displayName}");
+    } catch (err){
+      print(err);
+    }
+  }
+
+  void _logout(){
+    _googleSignIn.signOut();
+    setState(() {
+      _isLoggedIn = false;
+    });
   }
 }
