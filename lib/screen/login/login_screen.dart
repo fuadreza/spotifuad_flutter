@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:spotifuad/screen/login/bloc/login_cubit.dart';
+import 'package:spotifuad/utils/navigator.dart';
 import 'package:spotifuad/utils/setup.dart';
 import 'package:spotifuad/utils/tools.dart';
 
@@ -27,8 +28,22 @@ class _LoginScreenState extends State<LoginScreen> {
     loginBloc = BlocProvider.of<LoginCubit>(context);
   }
 
+  void checkSignIn() async {
+    var userSignedIn = await _googleSignIn.isSignedIn();
+
+    setState(() {
+      _isLoggedIn = userSignedIn;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () async {
+      checkSignIn();
+    });
+    if (_isLoggedIn) {
+      MyNavigator.goToHome(context);
+    }
     return Scaffold(
       body: Hero(
         tag: 'logo',
@@ -51,7 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 logoSpotifuad,
                 width: 150.0,
               ),
-              SizedBox(height: 40,),
+              SizedBox(
+                height: 40,
+              ),
               _signInButton(),
             ],
           ),
@@ -62,14 +79,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _signInButton() {
     return InkWell(
-      onTap: (){
+      onTap: () {
         _login();
       },
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-          color: Colors.white
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(50)), color: Colors.white),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
           child: Row(
@@ -77,7 +91,9 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image(image: AssetImage(logoGoogle), height: 25.0),
-              SizedBox(width: 8,),
+              SizedBox(
+                width: 8,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: Text(
@@ -95,20 +111,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _login() async{
-    try{
+  void _login() async {
+    try {
       await _googleSignIn.signIn();
-      setState(() {
-        _isLoggedIn = true;
-      });
       print("EMAIL USER : ${_googleSignIn.currentUser.email}");
       print("NAME USER : ${_googleSignIn.currentUser.displayName}");
-    } catch (err){
+      checkSignIn();
+    } catch (err) {
       print(err);
     }
   }
 
-  void _logout(){
+  void _logout() {
     _googleSignIn.signOut();
     setState(() {
       _isLoggedIn = false;
